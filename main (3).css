@@ -1,14 +1,15 @@
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
 body {
+    width: 95%;
+    max-width: 75rem;
+    margin: 1em auto;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 100%;
-    width: 90%;
-    margin: 1em auto;
     line-height: 1.5;
 }
 
@@ -21,17 +22,17 @@ h3 { font-size: 120%; }
 li, p { font-size: 95%; }
 
 header {
+    overflow: hidden;
+    padding: 1em;
     border: 2px solid steelblue;
     background-image: linear-gradient(to bottom, white 37%, lightsteelblue 63%);
     color: steelblue;
     text-align: center;
-    padding: 1em;
-    overflow: hidden;
 }
 
 header img {
     float: left;
-    max-width: 120px;
+    max-width: min(120px, 30%);
 }
 
 header p {
@@ -39,55 +40,52 @@ header p {
 }
 
 .main-nav {
-    background-color: steelblue;
     border-radius: 0 0 6px 6px;
+    background-color: steelblue;
 }
 
+/* Mobile-first navigation: stack links vertically on narrow screens. */
 .menu {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     list-style: none;
-    gap: 0.25em;
-    padding: 0.5em;
+    gap: .25em;
+    padding: .5em;
 }
 
-.menu > li {
+.menu > li,
+.has-submenu {
     position: relative;
 }
 
 .menu a {
+    display: block;
+    padding: .5em .9em;
     color: white;
     text-decoration: none;
-    display: inline-block;
-    padding: 0.5em 0.9em;
 }
 
 .menu > li > a:hover,
-.submenu a:hover {
+.menu > li > a:focus-visible,
+.submenu a:hover,
+.submenu a:focus-visible {
     text-decoration: underline;
 }
 
 .menu > li.current > a {
     border: 2px solid white;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.08);
-}
-
-.has-submenu {
-    position: relative;
+    background: rgba(255, 255, 255, .08);
 }
 
 .submenu {
     display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
+    position: static;
     min-width: 220px;
     list-style: none;
+    padding: .25em 0 .25em 1em;
+    border-left: 2px solid white;
     background-color: steelblue;
-    padding: 0.25em 0;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    z-index: 10;
 }
 
 .has-submenu:hover .submenu,
@@ -95,21 +93,22 @@ header p {
     display: block;
 }
 
+/* Keep content in a single column on phones, with the aside after the section. */
 main {
     display: flex;
+    flex-direction: column;
+    gap: 1em;
     padding-bottom: .5em;
-    gap: 1.5em;
 }
 
 section {
-    flex: 1 1 65%;
+    min-width: 0;
 }
 
 aside {
-    flex: 1 1 35%;
     height: fit-content;
+    margin: .5em 0 1em;
     padding: 1em 1.5em;
-    margin: 1em 0;
     border: 2px solid steelblue;
     border-radius: 25px;
 }
@@ -124,7 +123,7 @@ aside ul {
 }
 
 aside ul li {
-    margin: 0.2em 0;
+    margin: .2em 0;
 }
 
 aside a,
@@ -134,29 +133,53 @@ section a {
 }
 
 blockquote {
-    margin: 0.5em 0 1em 1.5em;
+    margin: .5em 0 1em 1.5em;
     font-style: italic;
 }
 
 footer {
-    text-align: center;
+    padding: .75em;
     background-color: steelblue;
     color: white;
-    padding: 0.75em;
+    text-align: center;
 }
 
-@media (max-width: 700px) {
-    main {
-        flex-direction: column;
+/* At tablet widths, the primary navigation has room to become horizontal. */
+@media (min-width: 48rem) {
+    .menu {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
     }
 
-    .menu {
-        flex-direction: column;
+    .menu a {
+        display: inline-block;
     }
 
     .submenu {
-        position: static;
-        margin-top: 0.3em;
-        border-left: 2px solid white;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 10;
+        padding: .25em 0;
+        border: 1px solid rgba(255, 255, 255, .3);
+    }
+
+    .submenu a {
+        display: block;
+    }
+}
+
+/* Give the section and aside separate columns only when both remain readable. */
+@media (min-width: 64rem) {
+    main {
+        display: grid;
+        grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr);
+        align-items: start;
+        gap: 1.5em;
+    }
+
+    aside {
+        margin: 1em 0;
     }
 }
